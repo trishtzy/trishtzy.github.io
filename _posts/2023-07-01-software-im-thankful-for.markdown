@@ -4,6 +4,9 @@ title:  "Software I'm thankful for"
 date:   2023-07-01 11:50:00 +0800
 categories: blog
 ---
+
+*Edited on: 3 July 2023*
+
 I remember reading this HN post ["Software I’m thankful for (2021) (crawshaw.io)"](https://news.ycombinator.com/item?id=32953732) and wondered what would be my version of it.
 
 Here's my list:
@@ -14,13 +17,15 @@ It has accompanied me since 2013 when I was an undergrad. It just works and neve
 
 #### [VSCode](https://code.visualstudio.com/)
 
-I usually code using VSCode. I'm thankful for the engineers who built useful extensions to lint my code, highlight language syntaxes. I used LiveShare once and it is great for remote pair programming. Sadly there're privacy issues when using it in a company.
+I usually code with VSCode. It makes my development experience better when switching between multiple languages. It auto lints when I save, I have my debug console, terminal, GitLens all in one window. I can also use Github co-pilot extension for their code suggestions too.
 
-Special mention to GitLens extension as well. Helps blaming my coworkers a lot easier. :laughing: I'm kidding.
+I'm sure you can have a similar setup using tmux and vim, but it does take a while to setup. VSCode is pretty much click install extension and start coding.
+
+I used VSCode LiveShare once and it is great for remote pair programming. Sadly there're privacy issues when using it in a company.
 
 #### [Rectangle App](https://rectangleapp.com/)
 
-I was searching for a tool to help resize my windows automatically with hotkeys and this app does it perfectly!
+I was searching for a tool that helps resize my windows automatically with hotkeys, and this app accomplishes that flawlessly! It allows me to maximize my window space across various applications. For instance, I can have my browser window on the left and my code editor on the right. Furthermore, if I have an extended display, I can conveniently use shortcuts to move a window to the second display.
 
 #### [Homebrew](https://brew.sh/)
 
