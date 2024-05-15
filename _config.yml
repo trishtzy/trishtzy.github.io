@@ -21,9 +21,9 @@
 title: Tricia Tan
 email: hello@triciatzy.com
 description: >- # this means to ignore newlines until "baseurl:"
-  Musings on all things related to software engineering
+  notes about software and other things
 baseurl: "/" # the subpath of your site, e.g. /blog
-url: "https://trishtzy.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+url: "https://blog.trishtzy.com" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: trishtzy
 github_username:  trishtzy
 
