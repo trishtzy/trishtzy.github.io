@@ -5,15 +5,15 @@ date:   2023-07-24 07:38:00 +0800
 categories: blog
 ---
 
-At some point when starting a Go web app, you'll probably need to decide which ORM (or no ORM) to use. Let's assume you are using Postgres. Out of all the libraries offered in the Go community, I've narrowed down to [sqlc](https://github.com/kyleconroy/sqlc) and [gorm](https://gorm.io/).
+At some point when starting a Go web app, you'll probably need to decide which ORM (or no ORM) to use. Let's assume you are using Postgres. Out of all the libraries offered in the Go community, I've narrowed it down to [sqlc](https://github.com/kyleconroy/sqlc) and [gorm](https://gorm.io/).
 
-There are a few considerations to think about before jumping into either. Personally I would choose sqlc with [pgx](https://github.com/jackc/pgx) driver.
+There are a few considerations to think about before jumping into either. Personally I would choose sqlc with the [pgx](https://github.com/jackc/pgx) driver.
 
 ### Benefits of gorm
 
 gorm makes querying your database easy. You don't need to worry about SQL syntax. You simply write the same server language, Go, to query the DB.
 
-gorm allows you to define associations in your model `struct`.
+gorm allows you to define associations in your model `struct`. So if you define your Go structs to have db relations, gorm automatically handles it for you.
 
 ```go
 // `User` belongs to `Company`, `CompanyID` is the foreign key
@@ -42,8 +42,7 @@ gorm allows you to follow a domain driven file directory, which typically looks 
   - handler.go
 ```
 
-gorm offers soft delete option which you would otherwise need to implement manually.
-> If your model includes a gorm.DeletedAt field (which is included in gorm.Model), it will get soft delete ability automatically!
+Another benefit is, if your Go struct has a `gorm.DeletedAt` attribute, Gorm automatically supports soft delete for you. You may find that useful if there're data you would want to retain.
 
 ### Benefits of sqlc
 
@@ -51,7 +50,7 @@ sqlc on the other hand, is a different approach to querying your db from your we
 
 If you did not already check out sqlc, it automatically generates your models and query functions from your db schema and the `query.sql` that you write. This is different from gorm where you define the models manually.
 
-What's even better is the data type that sqlc translates for you from postgres to Go data type.
+What's even better is sqlc translates postgres data type to Go data type effortlessly.
 
 Let's take this migration as an example:
 
@@ -90,7 +89,7 @@ type Author struct {
 
 Notice the data types generated in `Author` struct. The biggest benefit of using sqlc is type safety. The generated `struct` clearly tells me which attribute is nullable and which isn't. If it's non-nullable, it will auto map to Go native data type. Otherwise, to a `pgtype`.
 
-Using gorm requires extra effort to ensure the data type accuracy between your Go `struct` and postgres table column types.
+Using gorm requires extra effort to ensure the data type accuracy between your Go `struct` and postgres table column types. Sqlc ensures the same state between your database schema and your Go code.
 
 More often than not, in a typical Go `struct` using gorm, you do not know if the corresponding pg column is nullable or not. Why is this important?
 
