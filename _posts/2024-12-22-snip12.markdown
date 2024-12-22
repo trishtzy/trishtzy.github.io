@@ -11,6 +11,7 @@ I started with the [OpenZeppelin docs](https://docs.openzeppelin.com/contracts-c
 
 This post focuses on the on-chain verification aspects. Let's begin with the tool versions I used:
 ```toml
+# scarb.toml
 starknet = "2.8.2"
 snforge_std = "0.30.0"
 openzeppelin = "0.17.0"
@@ -39,7 +40,7 @@ struct Message {
 }
 ```
 
-This hash is generated using Cairo's selector macro:
+This hash is generated using Cairo's [selector macro](https://book.cairo-lang.org/ch11-05-macros.html?highlight=selector#macros):
 
 ```rust
 let message_type_hash = selector!(
@@ -47,7 +48,7 @@ let message_type_hash = selector!(
 );
 ```
 
-However, when implementing this in other languages, you'll encounter some challenges. For instance, trying to use `u64` (as shown in the selector string) will result in errors like this in Golang:
+However, when implementing this in other languages, you'll encounter some challenges. For instance, trying to use `u64` (as shown in the selector string) will result in errors like this in Golang[^1]:
 
 ```
 panic: fail to unmarshal TypedData: can't parse type u64
@@ -57,7 +58,7 @@ Through implementation, I discovered two critical points:
 
 1. **Type Compatibility**: While the Cairo Message struct doesn't need to exactly match SNIP-12's data types, the `MESSAGE_TYPE_HASH` must remain consistent between off-chain and on-chain implementations. For maintainability, it's best to keep the types aligned.
 
-2. **Timestamp vs u128**: For the `expiry` field, you can use either `u128` or `timestamp`. They're functionally equivalent since timestamps are treated as u128 values representing seconds[^1]. Using `timestamp` makes the code's intent clearer.
+2. **Timestamp vs u128**: For the `expiry` field, you can use either `u128` or `timestamp`. They're functionally equivalent since timestamps are treated as u128 values representing seconds[^2]. Using `timestamp` makes the code's intent clearer.
 
 Here's a working off-chain implementation in Golang that correctly generates the message type hash:
 
@@ -225,8 +226,8 @@ To conclude, if you ever find yourself implementing SNIP-12. I hope you find thi
 
 # Footnotes
 
-[^1]: See type definitions in [SNIP-12](https://github.com/starknet-io/SNIPs/blob/main/SNIPS/snip-12.md#how-to-work-with-each-type)
+[^1]: I'm using Golang as a language choice in this post. You can use Python or Javascript starknet libraries as well.
 
-[^2]: I'm using Golang as a language choice in this post. You can use Python or Typescript starknet libraries as well.
+[^2]: See type definitions in [SNIP-12](https://github.com/starknet-io/SNIPs/blob/main/SNIPS/snip-12.md#how-to-work-with-each-type)
 
 [^3]: See domain separator in [SNIP-12](https://github.com/starknet-io/SNIPs/blob/main/SNIPS/snip-12.md#domain-separator)
