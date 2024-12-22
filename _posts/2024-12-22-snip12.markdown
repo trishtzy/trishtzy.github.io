@@ -117,7 +117,7 @@ func main() {
   // message type hash: 0xa2a7036c1f406af7c47722b209f23bd2f2d6ac21423c8c73bd92cf28409ee2
 }
 ```
-https://goplay.tools/snippet/HKBsXawjuLx
+https://goplay.tools/snippet/BnnMer-oVQu
 
 
 It'll be helpful to note that `u256` used in `amount` field will be split into low/high 128 bits[^1].
