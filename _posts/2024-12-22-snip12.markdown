@@ -117,7 +117,7 @@ func main() {
   // message type hash: 0xa2a7036c1f406af7c47722b209f23bd2f2d6ac21423c8c73bd92cf28409ee2
 }
 ```
-https://goplay.tools/snippet/BnnMer-oVQu
+[https://goplay.tools/snippet/BnnMer-oVQu](https://goplay.tools/snippet/BnnMer-oVQu)
 
 
 After changing `expiry` data type to `timestamp`, you'll need to update `MESSAGE_TYPE_HASH` to match the new hash and the Message struct in Cairo to be compliant with SNIP-12.
