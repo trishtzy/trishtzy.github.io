@@ -66,54 +66,54 @@ Here's a working off-chain implementation in Golang that correctly generates the
 package main
 
 import (
-	"encoding/json"
-	"fmt"
+  "encoding/json"
+  "fmt"
 
-	"github.com/NethermindEth/starknet.go/typedData"
+  "github.com/NethermindEth/starknet.go/typedData"
 )
 
 func main() {
-	// JSON data defined directly in the code
-	jsonData := `{
-		"types": {
-			"StarknetDomain": [
-				{ "name": "name", "type": "shortstring" },
-				{ "name": "version", "type": "shortstring" },
-				{ "name": "chainId", "type": "shortstring" },
-				{ "name": "revision", "type": "shortstring" }
-			],
-			"Message": [
-				{ "name": "recipient", "type": "ContractAddress" },
-				{ "name": "amount", "type": "u256" },
-				{ "name": "nonce", "type": "felt" },
-				{ "name": "expiry", "type": "timestamp" }
-			]
-		},
-		"primaryType": "Message",
-		"domain": {
-			"name": "StarkNet Mail",
-			"version": "1",
-			"chainId": "0x534e5f5345504f4c4941",
-			"revision": "1"
-		},
-		"message": {
-			"recipient": "0xd392b0c0500700d02d27ab30805ec80ddd3320ff",
-			"amount": "100.00",
-			"nonce": 0,
-			"expiry": 1734859800
-		}
-	}`
+  // JSON data defined directly in the code
+  jsonData := `{
+    "types": {
+      "StarknetDomain": [
+        { "name": "name", "type": "shortstring" },
+        { "name": "version", "type": "shortstring" },
+        { "name": "chainId", "type": "shortstring" },
+        { "name": "revision", "type": "shortstring" }
+      ],
+      "Message": [
+        { "name": "recipient", "type": "ContractAddress" },
+        { "name": "amount", "type": "u256" },
+        { "name": "nonce", "type": "felt" },
+        { "name": "expiry", "type": "timestamp" }
+      ]
+    },
+    "primaryType": "Message",
+    "domain": {
+      "name": "StarkNet Mail",
+      "version": "1",
+      "chainId": "0x534e5f5345504f4c4941",
+      "revision": "1"
+    },
+    "message": {
+      "recipient": "0xd392b0c0500700d02d27ab30805ec80ddd3320ff",
+      "amount": "100.00",
+      "nonce": 0,
+      "expiry": 1734859800
+    }
+  }`
 
-	var ttd typedData.TypedData
-	err := json.Unmarshal([]byte(jsonData), &ttd)
-	if err != nil {
-		panic(fmt.Errorf("fail to unmarshal TypedData: %w", err))
-	}
-	messageTypeHash, err := ttd.GetTypeHash("Message")
-	if err != nil {
-		panic(fmt.Errorf("fail to get message type hash: %w", err))
-	}
-	fmt.Println("message type hash:", messageTypeHash)
+  var ttd typedData.TypedData
+  err := json.Unmarshal([]byte(jsonData), &ttd)
+  if err != nil {
+    panic(fmt.Errorf("fail to unmarshal TypedData: %w", err))
+  }
+  messageTypeHash, err := ttd.GetTypeHash("Message")
+  if err != nil {
+    panic(fmt.Errorf("fail to get message type hash: %w", err))
+  }
+  fmt.Println("message type hash:", messageTypeHash)
   // message type hash: 0xa2a7036c1f406af7c47722b209f23bd2f2d6ac21423c8c73bd92cf28409ee2
 }
 ```
@@ -154,10 +154,10 @@ An interesting discovery involves the Starknet Domain separator. When using revi
 ```go
 // continuing from above Go code
 domainHash, err := ttd.GetStructHash(ttd.Revision.Domain())
-	if err != nil {
-		panic(fmt.Errorf("fail to get struct hash: %w", err))
-	}
-	fmt.Println("domain hash:", domainHash)
+  if err != nil {
+    panic(fmt.Errorf("fail to get struct hash: %w", err))
+  }
+  fmt.Println("domain hash:", domainHash)
   // 0x6c09a2d2b4766fc27839cddedc0bf21408750397698671710b1ea8fd7761287
 ```
 
