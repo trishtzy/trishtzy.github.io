@@ -1,19 +1,15 @@
 ---
 layout: post
-title:  "On SNIP-12"
+title:  "SNIP-12 Deep Dive: Type Hashing and Domain Separators"
 ---
 
-SNIP-12 is Starknet Improvement Proposal 12, which is heavily based on [EIP712](https://eips.ethereum.org/EIPS/eip-712). Both proposals define the standard for hashing and signing typed structured data instead of hexadecimal string that does not make sense to users when signing a transaction in a browser extension.
+SNIP-12 is Starknet Improvement Proposal 12, which is heavily based on [EIP712](https://eips.ethereum.org/EIPS/eip-712). Both proposals define a standard for hashing and signing typed structured data replacing the older approach of signing hexadecimal strings that are meaningless to users in browser extensions.
 
-Having first hand experience in implementing SNIP-12, I would like to share what I've discovered and learned along the way.
+Having implemented SNIP-12 firsthand, I'd like to share my key learnings and discoveries.
 
-My starting point is [OpenZeppelin docs](https://docs.openzeppelin.com/contracts-cairo/0.11.0/guides/snip12), a walkthrough on the full implementation of the signature signing in Cairo language.
+I started with the [OpenZeppelin docs](https://docs.openzeppelin.com/contracts-cairo/0.11.0/guides/snip12), which provides a walkthrough for implementing signature signing in Cairo. The basic flow involves generating an off-chain signature in your preferred language (like Golang or Javascript) and then verifying that signature on-chain using Cairo.
 
-Here is the flow: you'll generate an offchain signature using any language, for example, Golang, Javascript and then use Cairo to verify the signature on-chain.
-
-This post focuses on on-chain verification.
-
-Before we begin, I'd like to state tool versions that I'm using:
+This post focuses on the on-chain verification aspects. Let's begin with the tool versions I used:
 ```toml
 starknet = "2.8.2"
 snforge_std = "0.30.0"
@@ -27,7 +23,9 @@ require github.com/NethermindEth/starknet.go v0.7.3
 ```
 
 
-## How to generate message type hash
+## Message Type Hash Generation: Lessons Learned
+
+Let's start with OpenZeppelin's example of a message struct and its type hash:
 
 ```rust
 const MESSAGE_TYPE_HASH: felt252 = 0xa2a7036c1f406af7c47722b209f23bd2f2d6ac21423c8c73bd92cf28409ee2;
@@ -41,7 +39,7 @@ struct Message {
 }
 ```
 
-This is the example provided by OpenZeppelin. If you compare Message struct with SNIP-12 specification. `u64` type is not recognised. You will not be able to generate the same message hash using Python, Go and Typescript (i.e. any other languages other than Cairo).
+This hash is generated using Cairo's selector macro:
 
 ```rust
 let message_type_hash = selector!(
@@ -49,19 +47,20 @@ let message_type_hash = selector!(
 );
 ```
 
-This yields `MESSAGE_TYPE_HASH` above.
-
-But in Golang, you'll get a panic error:
+However, when implementing this in other languages, you'll encounter some challenges. For instance, trying to use `u64` (as shown in the selector string) will result in errors like this in Golang:
 
 ```
 panic: fail to unmarshal TypedData: can't parse type u64
 ```
 
-I concluded that the Message struct defined in Cairo does not necessarily need to follow SNIP-12 defined data types, as long as the `MESSAGE_TYPE_HASH` is the same from your off-chain and on-chain signing.
+Through implementation, I discovered two critical points:
 
-Nevertheless, it is best to make the struct similar. Otherwise you might end up with more type inconsistencies.
+1. **Type Compatibility**: While the Cairo Message struct doesn't need to exactly match SNIP-12's data types, the `MESSAGE_TYPE_HASH` must remain consistent between off-chain and on-chain implementations. For maintainability, it's best to keep the types aligned.
 
-The correct off-chain message that is signed will look something like this:
+2. **Timestamp vs u128**: For the `expiry` field, you can use either `u128` or `timestamp`. They're functionally equivalent since timestamps are treated as u128 values representing seconds[^1]. Using `timestamp` makes the code's intent clearer.
+
+Here's a working off-chain implementation in Golang that correctly generates the message type hash:
+
 
 ```go
 package main
@@ -121,15 +120,9 @@ func main() {
 https://goplay.tools/snippet/HKBsXawjuLx
 
 
-Note that `expiry` field can either be u128 or timestamp as the latter will be treated like u128, represented in seconds[^1]. In the case of `expiry`, defining it as `timestamp` is clearer than `u128`.
-
 It'll be helpful to note that `u256` used in `amount` field will be split into low/high 128 bits[^1].
 
-The second problem faced is forming the selector string. It is unintuitive especially converting u256 to an object of low and high values.
-
-I would suggest to use Golang library since it has the least amount of setup needed[^2].
-
-So yes, if you've noticed, the message type hash generated is different from the Cairo example OpenZeppelin provided. So you will need to update `MESSAGE_TYPE_HASH` and `expiry` data type.
+After changing `expiry` data type to `timestamp`, you'll need to update `MESSAGE_TYPE_HASH` to match the new hash and the Message struct in Cairo to be compliant with SNIP-12.
 
  ```diff
 -const MESSAGE_TYPE_HASH: felt252 = 0x120ae1bdaf7c1e48349da94bb8dad27351ca115d6605ce345aee02d68d99ec1;
@@ -145,11 +138,9 @@ So yes, if you've noticed, the message type hash generated is different from the
  }
  ```
 
-## Starknet Domain affects final message hash
+## Starknet Domain Separator Mystery
 
-If you notice the example above, we are using revision 1 which corresponds to `Starknet Domain` domain object[^3].
-
-Interestingly, the struct hash of "domain" object is different between Cairo and Golang.
+An interesting discovery involves the Starknet Domain separator. When using revision 1[^3], I found that the domain struct hash differs between Cairo and other languages. The culprit? A seemingly minor detail - the version field requires a 'v' prefix in Cairo to generate matching hashes.
 
 ```json
 "domain": {
@@ -189,7 +180,7 @@ println!("domain_struct_hash: {:?}", domain.hash_struct());
 // It does not match `0x6c09a2d2b4766fc27839cddedc0bf21408750397698671710b1ea8fd7761287`
 ```
 
-Any guesses? Turns out, you need a `v` prefix in `version` field for cairo to compute the same hash as the other languages.
+After adding `v` prefix,
 
 ```diff
 "domain": {
@@ -230,12 +221,9 @@ impl StructHashStarknetDomainImpl of StructHash<StarknetDomain> {
 }
 ```
 
-I can't figure out where the prefix `v` is taken into account when calculating the hash.
+It's not obvious why prefix `v` matters when calculating domain hash in Cairo.
 
-Anyway, if you ever find yourself implementing SNIP-12. I hope you find this useful.
-
-
-
+To conclude, if you ever find yourself implementing SNIP-12. I hope you find this useful.
 
 # Footnotes
 
