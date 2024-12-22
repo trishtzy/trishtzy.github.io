@@ -1,0 +1,129 @@
+---
+layout: post
+title:  "On SNIP-12"
+---
+
+SNIP-12 is Starknet Improvement Proposal 12, which is heavily based on [EIP712](https://eips.ethereum.org/EIPS/eip-712). Both proposals define the standard for hashing and signing typed structured data instead of hexadecimal string that does not make sense to users when signing a transaction in a browser extension.
+
+Having first hand experience in implementing SNIP-12, I would like to share what I've discovered and learned along the way.
+
+My starting point is [OpenZeppelin docs](https://docs.openzeppelin.com/contracts-cairo/0.11.0/guides/snip12), a walkthrough on the full implementation of the signature signing in Cairo language.
+
+Here is the flow: you'll generate an offchain signature using any language, for example, Golang, Javascript and then use Cairo to verify the signature on-chain.
+
+This post focuses on on-chain verification.
+
+## How to generate message type hash
+
+```rust
+const MESSAGE_TYPE_HASH: felt252 = 0x120ae1bdaf7c1e48349da94bb8dad27351ca115d6605ce345aee02d68d99ec1;
+
+#[derive(Copy, Drop, Hash)]
+struct Message {
+    recipient: ContractAddress,
+    amount: u256,
+    nonce: felt252,
+    expiry: u64
+}
+```
+
+This is the example provided by OpenZeppelin. If you compare Message struct with SNIP-12 specification. `u64` type is not recognised. You will not be able to generate the same message hash using Python, Go and Typescript (i.e. any other languages other than Cairo).
+
+```rust
+let message_type_hash = selector!(
+    "\"Message\"(\"recipient\":\"ContractAddress\",\"amount\":\"u256\",\"nonce\":\"felt\",\"expiry\":\"u64\")\"u256\"(\"low\":\"felt\",\"high\":\"felt\")"
+);
+```
+
+This yields `MESSAGE_TYPE_HASH` above.
+
+But in Golang, you'll get a panic error:
+
+```
+panic: fail to unmarshal TypedData: can't parse type u64
+```
+
+I concluded that the Message struct defined in Cairo does not necessarily need to follow SNIP-12 defined data types, as long as the `MESSAGE_TYPE_HASH` is the same from your off-chain and on-chain signing.
+
+Nevertheless, it is best to make the struct similar. Otherwise you might end up with more type inconsistencies.
+
+The correct off-chain message that is signed will look something like this:
+
+```go
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+
+	"github.com/NethermindEth/starknet.go/typedData"
+)
+
+// https://goplay.tools/snippet/HKBsXawjuLx
+func main() {
+	// JSON data defined directly in the code
+	jsonData := `{
+		"types": {
+			"StarknetDomain": [
+				{ "name": "name", "type": "shortstring" },
+				{ "name": "version", "type": "shortstring" },
+				{ "name": "chainId", "type": "shortstring" },
+				{ "name": "revision", "type": "shortstring" }
+			],
+			"Message": [
+				{ "name": "recipient", "type": "ContractAddress" },
+				{ "name": "amount", "type": "u256" },
+				{ "name": "nonce", "type": "felt" },
+				{ "name": "expiry", "type": "timestamp" }
+			]
+		},
+		"primaryType": "Message",
+		"domain": {
+			"name": "StarkNet Mail",
+			"version": "1",
+			"chainId": "1",
+			"revision": "1"
+		},
+		"message": {
+			"recipient": "0xd392b0c0500700d02d27ab30805ec80ddd3320ff",
+			"amount": "100.00",
+			"nonce": 0,
+			"expiry": 1734859800
+		}
+	}`
+
+	var ttd typedData.TypedData
+	err := json.Unmarshal([]byte(jsonData), &ttd)
+	if err != nil {
+		panic(fmt.Errorf("fail to unmarshal TypedData: %w", err))
+	}
+	messageTypeHash, err := ttd.GetTypeHash("Message")
+	if err != nil {
+		panic(fmt.Errorf("fail to get struct hash: %w", err))
+	}
+	fmt.Println("message type hash:", messageTypeHash)
+}
+```
+https://goplay.tools/snippet/HKBsXawjuLx
+
+
+Note that `expiry` field can either be u128 or timestamp as the latter will be treated like u128, represented in seconds[^1]. In the case of `expiry`, defining it as `timestamp` is clearer than `u128`.
+
+It'll be helpful to note that `u256` used in `amount` field will be split into low/high 128 bits[^1].
+
+The second problem faced is forming the selector string. It is unintuitive especially converting u256 to an object of low and high values.
+
+I would suggest to use Golang library since it has the least amount of setup needed[^2].
+
+
+
+
+
+
+
+
+# Footnotes
+
+[^1]: See type definitions in [SNIP-12](https://github.com/starknet-io/SNIPs/blob/main/SNIPS/snip-12.md#how-to-work-with-each-type)
+
+[^2]: I'm using Golang as a language choice in this post. You can use Python or Typescript starknet libraries as well.
