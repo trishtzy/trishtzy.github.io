@@ -120,8 +120,6 @@ func main() {
 https://goplay.tools/snippet/BnnMer-oVQu
 
 
-It'll be helpful to note that `u256` used in `amount` field will be split into low/high 128 bits[^1].
-
 After changing `expiry` data type to `timestamp`, you'll need to update `MESSAGE_TYPE_HASH` to match the new hash and the Message struct in Cairo to be compliant with SNIP-12.
 
  ```diff
