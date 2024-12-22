@@ -157,8 +157,8 @@ domainHash, err := ttd.GetStructHash(ttd.Revision.Domain())
   if err != nil {
     panic(fmt.Errorf("fail to get struct hash: %w", err))
   }
-  fmt.Println("domain hash:", domainHash)
-  // 0x6c09a2d2b4766fc27839cddedc0bf21408750397698671710b1ea8fd7761287
+fmt.Println("domain hash:", domainHash)
+// 0x6c09a2d2b4766fc27839cddedc0bf21408750397698671710b1ea8fd7761287
 ```
 
 Cairo:
