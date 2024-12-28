@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  "SNIP-12 Deep Dive: Type Hashing and Domain Separators"
+date:   2024-12-22 22:06:00 +0800
 ---
 
 SNIP-12 is Starknet Improvement Proposal 12, which is heavily based on [EIP712](https://eips.ethereum.org/EIPS/eip-712). Both proposals define a standard for hashing and signing typed structured data replacing the older approach of signing hexadecimal strings that are meaningless to users in browser extensions.
@@ -56,7 +57,7 @@ panic: fail to unmarshal TypedData: can't parse type u64
 
 Through implementation, I discovered two critical points:
 
-1. **Type Compatibility**: While the Cairo Message struct doesn't need to exactly match SNIP-12's data types, the `MESSAGE_TYPE_HASH` must remain consistent between off-chain and on-chain implementations. For maintainability, it's best to keep the types aligned.
+1. **Type Compatibility**: While the Cairo Message struct doesn't need to exactly match SNIP-12's data types, the `MESSAGE_TYPE_HASH` must remain consistent between off-chain and on-chain implementations. For maintainability, I would prefer to keep the types aligned.
 
 2. **Timestamp vs u128**: For the `expiry` field, you can use either `u128` or `timestamp`. They're functionally equivalent since timestamps are treated as u128 values representing seconds[^2]. Using `timestamp` makes the code's intent clearer.
 
@@ -138,6 +139,23 @@ After changing `expiry` data type to `timestamp`, you'll need to update `MESSAGE
  ```
 
 ## Starknet Domain Separator Mystery
+
+> **Edit:**
+> I realise this is due to felt252 interpreted `'1'` as a string instead of integer.
+> If the SNIP12MetadataImpl returns `1`, the domain hash will match. On hindsight this looks so obvious and the following content after this edit is not relevant.
+>
+> ```rust
+> pub impl SNIP12MetadataImpl of SNIP12Metadata {
+>     fn name() -> felt252 {
+>         'Paradex'
+>     }
+>     fn version() -> felt252 {
+>         1 // instead of previous '1'
+>     }
+> }
+> ```
+> Read more on felt252 [here](https://book.cairo-lang.org/ch02-02-felt252.html)
+
 
 An interesting discovery involves the Starknet Domain separator. When using revision 1[^3], I found that the domain struct hash differs between Cairo and other languages. The culprit? A seemingly minor detail - the version field requires a 'v' prefix in Cairo to generate matching hashes.
 
