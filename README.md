@@ -1,4 +1,4 @@
-# trishtzy.github.io
+# [blog.trishtzy.com](https://blog.trishtzy.com/)
 
 ## Contributing
 
