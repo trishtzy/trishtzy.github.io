@@ -139,7 +139,7 @@ func main() {
     transactor.GasLimit = uint64(21000)
     transactor.GasPrice = big.NewInt(20000000000) // 20 gwei
 
-    to := common.HexToAddress("0x742d35Cc6634C0532925a3b8D8aE8db17ee4C")
+    to := common.HexToAddress("0xe2412bb63a0a25d7b8973fc6764fd246ebe62c7a")
     value := big.NewInt(1000000000000000000) // 1 ETH in wei
     gasLimit := uint64(21000)
     gasPrice := big.NewInt(20000000000)
