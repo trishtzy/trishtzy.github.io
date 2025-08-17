@@ -2,8 +2,7 @@
 layout: post
 title:  "Rate limit by proof of work"
 date:   2025-08-16 00:00:00 +0800
-categories: [trading, decentralized-exchanges, anti-bot, proof-of-work]
-tags: [rpi, retail-price-improvement, pow, sha256, nonce, rate-limiting, websockets, redis, dex, trading-bots]
+tags: [rpi, retail-price-improvement, pow, sha256, nonce, rate-limiting, websockets, redis, dex, trading-bots, trading, decentralized-exchanges, anti-bot, proof-of-work]
 ---
 
 Trading platforms have increasingly adopted Retail Price Improvement (RPI) orders following Bybit's initial implementation[^1]. These orders benefit retail users by offering better prices than the best bid or ask in an orderbook, but they come with a crucial restriction: only retail users should be able to match against them. This creates an interesting technical challenge: how do we reliably identify retail users versus algorithmic traders?

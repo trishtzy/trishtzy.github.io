@@ -2,8 +2,7 @@
 layout: post
 title:  "Bitcoin vs Ethereum Signature Schemes: A Deep Dive into Cryptographic Differences"
 date:   2025-06-05 02:16:00 +0800
-categories: [blockchain, cryptography, bitcoin, ethereum]
-tags: [secp256k1, ecdsa, der-encoding, kms, gnosis-safe]
+tags: [secp256k1, ecdsa, der-encoding, kms, gnosis-safe, blockchain, cryptography, bitcoin, ethereum]
 ---
 
 Recently, I had the opportunity to work on Gnosis Safe message signing with AWS KMS. The key setup in KMS typically uses an asymmetric `ECC_SECG_P256K1` (secp256k1) key type.

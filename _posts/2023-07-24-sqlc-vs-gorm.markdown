@@ -2,7 +2,6 @@
 layout: post
 title:  "sqlc vs gorm"
 date:   2023-07-24 07:38:00 +0800
-categories: blog
 ---
 
 At some point when starting a Go web app, you'll probably need to decide which ORM (or no ORM) to use. Let's assume you are using Postgres. Out of all the libraries offered in the Go community, I've narrowed it down to [sqlc](https://github.com/kyleconroy/sqlc) and [gorm](https://gorm.io/).

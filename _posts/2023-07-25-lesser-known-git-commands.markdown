@@ -2,7 +2,6 @@
 layout: post
 title:  "Lesser known Git commands"
 date:   2023-07-30 22:06:00 +0800
-categories: blog
 ---
 Here are some helpful git commands to use in your software engineering career.
 
