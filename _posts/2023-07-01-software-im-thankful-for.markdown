@@ -2,6 +2,8 @@
 layout: post
 title:  "Software I'm thankful for"
 date:   2023-07-01 11:50:00 +0800
+redirect_from:
+  - /blog/2023/07/01/software-im-thankful-for.html
 ---
 
 *Edited on: 3 July 2023*
