@@ -11,4 +11,7 @@
   {%- if jekyll.environment == 'production' -%}
     {%- include ahrefs-analytics.html -%}
   {%- endif -%}
+  {%- if page.mermaid -%}
+    {%- include mermaid.html -%}
+  {%- endif -%}
 </head>
