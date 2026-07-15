@@ -3,6 +3,7 @@ layout: post
 title:  "Building a CAPTCHA for Agents"
 date:   2026-05-11 13:27:00 +0800
 tags: [captcha, agents, ai-agents, anti-bot, proof-of-agent, clawauth, recaptcha, cloudflare, luma, event-registration, agentic-web, bot-detection]
+mermaid: true
 ---
 
 > This post is a repost from nBits Labs blog. The original appears at [nbitslabs.com/blog/building-a-captcha-for-agents](https://nbitslabs.com/blog/building-a-captcha-for-agents).
