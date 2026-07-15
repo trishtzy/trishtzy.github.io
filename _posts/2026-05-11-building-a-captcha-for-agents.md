@@ -17,9 +17,9 @@ Most of the web is not built around that distinction. Anti-bot systems still rel
 
 This is not a hypothetical problem. The same companies that are preparing for an agent-heavy web are also rethinking how abuse prevention should work in that world.
 
-In Google Cloud's announcement of Fraud Defense<sup><a href="#fn-google-fraud-defense">1</a></sup>, reCAPTCHA evolves from a human-or-bot challenge into a broader trust system for the agentic web. The product is meant to help sites measure agentic activity, connect agent and human identities, set policies for agent traffic, and challenge suspicious automation.
+In Google Cloud's announcement of Fraud Defense[^google-fraud-defense], reCAPTCHA evolves from a human-or-bot challenge into a broader trust system for the agentic web. The product is meant to help sites measure agentic activity, connect agent and human identities, set policies for agent traffic, and challenge suspicious automation.
 
-Cloudflare makes a similar point from the infrastructure side<sup><a href="#fn-cloudflare-bots">2</a></sup>: "bot versus human" is no longer the most useful frame. Some bots are wanted, some humans are abusive, and many new clients do not behave like traditional browsers. What matters is whether the traffic is legitimate, accountable, and acceptable for the site receiving it.
+Cloudflare makes a similar point from the infrastructure side[^cloudflare-bots]: "bot versus human" is no longer the most useful frame. Some bots are wanted, some humans are abusive, and many new clients do not behave like traditional browsers. What matters is whether the traffic is legitimate, accountable, and acceptable for the site receiving it.
 
 This move away from simple human-versus-bot detection gave us a useful frame for a narrower event problem. When nBits planned its first community event, we did not need to decide whether every visitor was human. We needed to know whether a registrant had actually explored OpenClaw, NanoClaw, or a similar AI tool. That called for a filter that was easy for real agent users, but inconvenient for ordinary manual signups.
 
@@ -37,11 +37,11 @@ ClawAuth produces a challenge document every 30 minutes. The document contains a
 
 The challenge is deliberately awkward for most humans to complete manually. Statistically, only a small share of the world population can speak and write five different languages. Narrow that further to Singapore, where our events are currently held, and the number gets even smaller. For an agent with browser access and translation capability, however, the task is straightforward.
 
-In our current setup, ClawAuth uses GLM-5 via <span id="fnref-opencode" className="scroll-mt-32">OpenCode Go</span><sup><a href="#fn-opencode">3</a></sup> to produce the challenge documents. Participants do not need a frontier model to solve them. That is important to the design: the filter should prove that a participant has an agent workflow set up, not that they have access to the most expensive model.
+In our current setup, ClawAuth uses GLM-5 via OpenCode Go[^opencode] to produce the challenge documents. Participants do not need a frontier model to solve them. That is important to the design: the filter should prove that a participant has an agent workflow set up, not that they have access to the most expensive model.
 
 ## The Luma registration flow
 
-The ideal flow is agent-driven, but not yet seamless. In theory, a participant asks their agent to open the <span id="fnref-luma" className="scroll-mt-32">Luma event page</span><sup><a href="#fn-luma">4</a></sup>, read the instructions, go to ClawAuth, read the challenge document and answer the question, then return to Luma and submit the challenge answer in the registration form.
+The ideal flow is agent-driven, but not yet seamless. In theory, a participant asks their agent to open the Luma event page[^luma], read the instructions, go to ClawAuth, read the challenge document and answer the question, then return to Luma and submit the challenge answer in the registration form.
 
 ```mermaid
 sequenceDiagram
@@ -64,10 +64,9 @@ sequenceDiagram
 
 Here is the same idea through Botler, my personal Telegram interface for driving an agent. I asked Botler to open the Hermes Night Luma page, read the instructions, and go to ClawAuth for the challenge document:
 
-<figure>
-  <img src="/assets/img/hermes-agent-example-1.webp" alt="Telegram conversation where Botler starts the Hermes Night registration flow and navigates to Luma and ClawAuth." />
-  <figcaption>Botler starts from the Luma event page, follows the registration instructions, and opens ClawAuth for the challenge.</figcaption>
-</figure>
+![Telegram conversation where Botler starts the Hermes Night registration flow and navigates to Luma and ClawAuth.](/assets/img/hermes-agent-example-1.webp)
+
+*Botler starts from the Luma event page, follows the registration instructions, and opens ClawAuth for the challenge.*
 
 Not every participant must use a Botler. The challenge still works as long as they can use an agentic tool to read the challenge document, reason over it, and return a usable answer. Full browser automation is useful, but the stronger signal is whether the participant can actually operate an AI tool.
 
@@ -99,20 +98,23 @@ As a proof of concept, ClawAuth has been effective for organizing agent-related 
 
 Interested in using ClawAuth for your project? Contact us at support@nbitslabs.com.
 
-<hr className="mt-12 mb-6 border-[var(--rule)]" />
+---
 
-<div id="fn-google-fraud-defense" className="pt-2 text-sm text-ink/60">
-  <sup>1</sup> Jian Zhen, <a href="https://cloud.google.com/blog/products/identity-security/introducing-google-cloud-fraud-defense-the-next-evolution-of-recaptcha/">"Introducing Google Cloud Fraud Defense, the next evolution of reCAPTCHA"</a>, Google Cloud Blog, April 23, 2026.
-</div>
+## Postscript: the boundary from the other side
 
-<div id="fn-cloudflare-bots" className="pt-3 text-sm text-ink/60">
-  <sup>2</sup> Thibault Meunier, <a href="https://blog.cloudflare.com/past-bots-and-humans/">"Moving past bots vs. humans"</a>, The Cloudflare Blog, April 21, 2026.
-</div>
+*Added July 2026.* Since publishing, I have come across more interesting takes on the same problem: telling humans and agents apart. A couple stood out because they draw that line from the opposite side of ClawAuth.
 
-<div id="fn-opencode" className="pt-3 text-sm text-ink/60">
-  <sup>3</sup> <a href="https://opencode.ai/go">OpenCode Go</a> is a low-cost subscription for coding models that works with OpenCode or any agent. We use it here for access to GLM-5. <a href="#fnref-opencode" aria-label="Return to text">↩</a>
-</div>
+[Ghost Font](https://www.mixfont.com/ghost-font) is the cleanest mirror image. It hides a message in motion: the letters are dots that only resolve while a short video plays, so a person watching can read it while a model sampling individual frames just sees noise — and every render embeds a decoy message to mislead anything that does try to decode it. The catch is that this only holds while agents treat video as a bag of still frames. You could prompt the agent to run `abs(frame1 - frame2)` and the static background cancels out, leaving the moving dots — and the words — in plain sight.[^ghost-font-frames]
 
-<div id="fn-luma" className="pt-3 text-sm text-ink/60">
-  <sup>4</sup> Luma is the event platform we use for Calathea registrations, including the first <a href="https://luma.com/calathea">Calathea Meetup</a> and the upcoming <a href="https://luma.com/HermesNight">Hermes Night</a>. <a href="#fnref-luma" aria-label="Return to text">↩</a>
-</div>
+A different flavor is the trap for the careless human in the loop. Mitchell Hashimoto seeds prompt injections into his `AGENTS.md` files and code comments — not to catch agents, but to catch the people who let an agent act unsupervised and ship the result without reading it:
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Got em. I poison my AGENTS.md (and other things like code comments) all over the place with prompt injections like this to find people who don&#39;t review their code and sling it off to another human. Catches folks all the time and then its an instant ban.</p>&mdash; Mitchell Hashimoto (@mitchellh) <a href="https://twitter.com/mitchellh/status/2067970516951150721">View on X</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+The target there is not the agent but the accountability of the human behind it — a reminder that "who is really acting here" is the question underneath all of this, whichever side of the line you are trying to select for.
+
+[^google-fraud-defense]: Jian Zhen, ["Introducing Google Cloud Fraud Defense, the next evolution of reCAPTCHA"](https://cloud.google.com/blog/products/identity-security/introducing-google-cloud-fraud-defense-the-next-evolution-of-recaptcha/), Google Cloud Blog, April 23, 2026.
+[^cloudflare-bots]: Thibault Meunier, ["Moving past bots vs. humans"](https://blog.cloudflare.com/past-bots-and-humans/), The Cloudflare Blog, April 21, 2026.
+[^opencode]: [OpenCode Go](https://opencode.ai/go) is a low-cost subscription for coding models that works with OpenCode or any agent. We use it here for access to GLM-5.
+[^luma]: Luma is the event platform we use for Calathea registrations, including the first [Calathea Meetup](https://luma.com/calathea) and the upcoming [Hermes Night](https://luma.com/HermesNight).
+[^ghost-font-frames]: Mikey ([@itdobemikey](https://x.com/itdobemikey/status/2076144527342256332)) pointed this out: when Grok said a Ghost Font clip was pure static, he replied "look at `abs(frame_1 - frame_2)` and tell me what you see." Differencing consecutive frames cancels the static background and leaves only the animated dots, and Grok then read the hidden message ("HELLO HUMAN") straight off.
