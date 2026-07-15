@@ -2,6 +2,8 @@
 layout: post
 title:  "The case for passphrase"
 date:   2023-12-23 23:30:00 +0800
+redirect_from:
+  - /blog/2023/12/23/passphrases.html
 ---
 <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
