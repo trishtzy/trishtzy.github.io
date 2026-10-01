@@ -11,4 +11,4 @@ My working style is to always stay humble and curious about tech.
 
 If you agree with [37 signals](https://37signals.com/), then we'll probably be good friends.
 
-If you'd like to chat more, please email me hello@triciatzy.com. I'll be delighted!
+If you'd like to chat more, please email me blog@trishtzy.com. I'll be delighted!
