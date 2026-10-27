@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  "Lesser known Git commands"
+description: "A tour of lesser-known Git commands that make everyday engineering easier, including git commit --fixup and using git bisect to hunt down a breaking commit."
 date:   2023-07-30 22:06:00 +0800
 redirect_from:
   - /blog/2023/07/30/lesser-known-git-commands.html

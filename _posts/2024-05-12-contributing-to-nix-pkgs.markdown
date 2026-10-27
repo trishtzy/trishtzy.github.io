@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  "Contributing to Nixpkgs"
+description: "A step-by-step guide to contributing to Nixpkgs — how to upgrade an outdated package and add a brand-new one, walked through with real pull request examples."
 ---
 
 I've been starting to use [nix flake](https://nixos.wiki/wiki/Flakes) or [devenv](https://devenv.sh/) to manage my development environments. It saves me a lot of hassle when I need to develop on a new machine, which happened once (that's more than enough!) or when you've got an uncooperative teammate who decides to use a different psql version from the rest of the team and you got to upgrade yours to ensure generated files output the same version.

@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  "sqlc vs gorm"
+description: "Comparing sqlc and gorm for a Go and Postgres web app — the trade-offs between a query-first code generator and a full ORM, and why I reach for sqlc with pgx."
 date:   2023-07-24 07:38:00 +0800
 redirect_from:
   - /blog/2023/07/23/sqlc-vs-gorm.html

@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  "Software I'm thankful for"
+description: "A developer's list of the software I'm grateful for — Vim, VSCode, Rectangle, Homebrew, and the Go toolchain — and why each one earns its place in my workflow."
 date:   2023-07-01 11:50:00 +0800
 redirect_from:
   - /blog/2023/07/01/software-im-thankful-for.html

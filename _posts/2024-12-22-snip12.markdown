@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  "SNIP-12 Deep Dive: Type Hashing and Domain Separators"
+description: "A deep dive into Starknet's SNIP-12 for signing typed structured data — type hashing, domain separators, and lessons from on-chain verification in Cairo."
 date:   2024-12-22 22:06:00 +0800
 ---
 

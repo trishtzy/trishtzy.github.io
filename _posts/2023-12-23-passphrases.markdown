@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  "The case for passphrase"
+description: "Why passphrases beat short complex passwords, explained through password entropy — and why traditional banks still enforce weaker, less secure password rules."
 date:   2023-12-23 23:30:00 +0800
 redirect_from:
   - /blog/2023/12/23/passphrases.html
