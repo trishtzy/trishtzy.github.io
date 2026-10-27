@@ -1,5 +1,5 @@
 <script type="module">
-  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@12/dist/mermaid.esm.min.mjs";
 
   // Kramdown renders ```mermaid fences as <pre><code class="language-mermaid">.
   // Move the (unhighlighted) source into a <div class="mermaid"> that mermaid can render.
@@ -10,6 +10,6 @@
     code.parentElement.replaceWith(div);
   });
 
-  mermaid.initialize({ startOnLoad: false, theme: "default" });
+  mermaid.initialize({ startOnLoad: false, theme: "default", look: "classic" });
   await mermaid.run();
 </script>
