@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  "Bitcoin vs Ethereum Signature Schemes: A Deep Dive into Cryptographic Differences"
+description: "How Bitcoin and Ethereum handle signatures differently despite sharing the secp256k1 curve — DER encoding, ECDSA, and lessons from Gnosis Safe with AWS KMS."
 date:   2025-06-05 02:16:00 +0800
 tags: [secp256k1, ecdsa, der-encoding, kms, gnosis-safe, blockchain, cryptography, bitcoin, ethereum]
 redirect_from:

@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  "Rate limit by proof of work"
+description: "Using proof of work to rate limit trading bots on decentralized exchanges — how PoW challenges gate Retail Price Improvement (RPI) orders to real retail users."
 date:   2025-08-16 00:00:00 +0800
 tags: [rpi, retail-price-improvement, pow, sha256, nonce, rate-limiting, websockets, redis, dex, trading-bots, trading, decentralized-exchanges, anti-bot, proof-of-work]
 redirect_from:

@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  "Contributing to Nixpkgs Part 2"
+description: "Part 2 on contributing to Nixpkgs: three ways to patch old or unmaintained packages — local patch files, substituteInPlace, and upstreaming fixes to nixpkgs."
 ---
 
 **Table of Contents**

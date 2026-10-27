@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  "Building a CAPTCHA for Agents"
+description: "Building ClawAuth, a proof-of-agent CAPTCHA that flips bot detection on its head — instead of proving you're human, you prove you can act as an AI agent."
 date:   2026-05-11 13:27:00 +0800
 tags: [captcha, agents, ai-agents, anti-bot, proof-of-agent, clawauth, recaptcha, cloudflare, luma, event-registration, agentic-web, bot-detection]
 mermaid: true
